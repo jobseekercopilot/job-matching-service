@@ -31,6 +31,8 @@ See `contracts/openapi.json`.
 Requires Java 17 and Maven.
 
 ```bash
+./scripts/test-contract-policy.sh
+./scripts/verify-contracts.sh
 mvn clean verify
 mvn spring-boot:run
 ```
@@ -39,11 +41,21 @@ The service listens on port `8097` and expects Application Tracker at
 `http://localhost:8088` unless
 `APPLICATION_TRACKER_SERVICE_BASE_URL` is set.
 
+`APPLICATION_TRACKER_READER_TOKEN` is required and must contain at least 32
+bytes. It is injected only at runtime and sent as exactly one
+`X-Service-Token` header. Do not place a real value in source, examples, CI
+logs or issue comments.
+
+The Application Tracker client is generated during the Maven build from the
+exact producer-owned OpenAPI `1.1.0` snapshot and immutable provenance under
+`src/main/openapi`. OpenAPI Generator is pinned to `7.5.0`; generated sources
+and binaries remain under `target/` and are never committed. Contract scripts
+fail closed on missing inputs, checksum/provenance drift, removed security or
+error responses, and weakened required fields.
+
 The legacy workspace included an unused local generated-client JAR dependency.
-The extraction removed that binary and its `systemPath`: production code uses a
-manual `RestTemplate` client, and the clean repository now builds from declared
-dependencies. Replacing the manual client with a versioned generated package is
-tracked as future work.
+The extraction removed that binary and its `systemPath`; MATCH-02 now replaces
+the handwritten transport adapter with reproducible generation from source.
 
 ## Readiness
 

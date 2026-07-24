@@ -13,6 +13,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - name: Test contract input policy
+        run: ./scripts/test-contract-policy.sh
+      - name: Verify pinned contract input
+        run: ./scripts/verify-contracts.sh
       - uses: actions/setup-java@v4
         with:
           distribution: temurin
