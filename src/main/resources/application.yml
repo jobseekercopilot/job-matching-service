@@ -8,6 +8,7 @@ server:
 services:
   application-tracker-service:
     base-url: ${APPLICATION_TRACKER_SERVICE_BASE_URL:http://localhost:8088}
+    reader-token: ${APPLICATION_TRACKER_READER_TOKEN:}
 
 management:
   endpoints:

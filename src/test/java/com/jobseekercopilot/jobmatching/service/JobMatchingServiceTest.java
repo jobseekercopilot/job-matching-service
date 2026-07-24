@@ -10,7 +10,6 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
-import org.springframework.web.client.RestTemplate;
 
 class JobMatchingServiceTest {
 
@@ -96,7 +95,7 @@ class JobMatchingServiceTest {
         private List<ApplicationRecord> records = List.of();
 
         FakeApplicationTrackerClient() {
-            super(new RestTemplate(), "http://localhost");
+            super(null);
         }
 
         @Override
