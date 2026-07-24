@@ -8,6 +8,10 @@ returns search results.
 It does not find jobs, persist jobs, own application records, or store
 documents.
 
+Its position between canonical aggregation and Application Tracker enrichment
+is defined in the Infrastructure
+[Job Search architecture ADR](https://github.com/jobseekercopilot/infrastructure/blob/develop/docs/adr/0001-job-search-architecture-and-ownership.md).
+
 ## Runtime flow
 
 `Job Finder Gateway → Job Service → Job Matching Service → Application Tracker`
