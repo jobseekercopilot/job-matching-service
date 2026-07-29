@@ -6,7 +6,7 @@ contract_dir=${1:-"$script_dir/../src/main/openapi"}
 contract="$contract_dir/application-tracker.json"
 source_file="$contract_dir/application-tracker.SOURCE"
 checksums="$contract_dir/SHA256SUMS"
-expected_checksum=549cebba300c2caf3403b9de01d3c34de84464a280a02183751e8a9583ad982a
+expected_checksum=7722467906230b37c48aee583254115c16ea663e284bb4e6e020abb292693d78
 
 for required_file in application-tracker.json application-tracker.SOURCE SHA256SUMS; do
     test -f "$contract_dir/$required_file" && test ! -L "$contract_dir/$required_file" || {

@@ -56,6 +56,28 @@ class JobMatchingServiceTest {
     }
 
     @Test
+    void enrichesSavedApplicationWithoutInventingDocumentState() {
+        ApplicationRecord record = application(UUID.randomUUID());
+        record.setStatus(ApplicationStatus.SAVED);
+        record.setCvDocumentId(null);
+        record.setCoverLetterDocumentId(null);
+        record.setAppliedAt(null);
+        applicationTrackerClient.records = List.of(record);
+
+        JobMatchJob enriched = service.enrichJobs(
+                "user-1",
+                List.of(job("123456", "Software Developer", "Matchtech", "Dorking")))
+                .getJobs()
+                .get(0);
+
+        assertThat(enriched.getApplicationStatus()).isEqualTo(ApplicationStatus.SAVED);
+        assertThat(enriched.getApplicationId()).isEqualTo(record.getId());
+        assertThat(enriched.getCvDocumentId()).isNull();
+        assertThat(enriched.getCoverLetterDocumentId()).isNull();
+        assertThat(enriched.getAppliedAt()).isNull();
+    }
+
+    @Test
     void preservesDistanceWhenEnrichingJobs() {
         applicationTrackerClient.records = List.of();
         JobMatchJob job = job("999", "Tester", "Example", "London");

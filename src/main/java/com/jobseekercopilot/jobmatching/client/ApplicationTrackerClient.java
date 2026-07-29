@@ -8,7 +8,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClientResponseException;
 import org.springframework.web.client.RestClientException;
 
-import java.time.OffsetDateTime;
 import java.util.List;
 
 @Component
@@ -50,14 +49,10 @@ public class ApplicationTrackerClient {
         record.setStatus(source.getStatus() == null
                 ? null
                 : ApplicationStatus.valueOf(source.getStatus().getValue()));
-        record.setCreatedAt(toLocalDateTime(source.getCreatedAt()));
-        record.setUpdatedAt(toLocalDateTime(source.getUpdatedAt()));
-        record.setAppliedAt(toLocalDateTime(source.getAppliedAt()));
+        record.setCreatedAt(source.getCreatedAt());
+        record.setUpdatedAt(source.getUpdatedAt());
+        record.setAppliedAt(source.getAppliedAt());
         return record;
-    }
-
-    private java.time.LocalDateTime toLocalDateTime(OffsetDateTime value) {
-        return value == null ? null : value.toLocalDateTime();
     }
 
     public static class ApplicationTrackerUnavailableException extends RuntimeException {
