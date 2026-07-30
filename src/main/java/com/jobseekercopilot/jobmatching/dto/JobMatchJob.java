@@ -1,6 +1,6 @@
 package com.jobseekercopilot.jobmatching.dto;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -30,8 +30,8 @@ public class JobMatchJob {
     private UUID applicationId;
     private String cvDocumentId;
     private String coverLetterDocumentId;
-    private LocalDateTime appliedAt;
-    private LocalDateTime applicationUpdatedAt;
+    private OffsetDateTime appliedAt;
+    private OffsetDateTime applicationUpdatedAt;
 
     public String getId() { return id; }
     public void setId(String id) { this.id = id; }
@@ -81,8 +81,8 @@ public class JobMatchJob {
     public void setCvDocumentId(String cvDocumentId) { this.cvDocumentId = cvDocumentId; }
     public String getCoverLetterDocumentId() { return coverLetterDocumentId; }
     public void setCoverLetterDocumentId(String coverLetterDocumentId) { this.coverLetterDocumentId = coverLetterDocumentId; }
-    public LocalDateTime getAppliedAt() { return appliedAt; }
-    public void setAppliedAt(LocalDateTime appliedAt) { this.appliedAt = appliedAt; }
-    public LocalDateTime getApplicationUpdatedAt() { return applicationUpdatedAt; }
-    public void setApplicationUpdatedAt(LocalDateTime applicationUpdatedAt) { this.applicationUpdatedAt = applicationUpdatedAt; }
+    public OffsetDateTime getAppliedAt() { return appliedAt; }
+    public void setAppliedAt(OffsetDateTime appliedAt) { this.appliedAt = appliedAt; }
+    public OffsetDateTime getApplicationUpdatedAt() { return applicationUpdatedAt; }
+    public void setApplicationUpdatedAt(OffsetDateTime applicationUpdatedAt) { this.applicationUpdatedAt = applicationUpdatedAt; }
 }
