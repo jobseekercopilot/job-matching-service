@@ -5,6 +5,9 @@ import com.jobseekercopilot.jobmatching.dto.ApplicationRecord;
 import com.jobseekercopilot.jobmatching.dto.ApplicationStatus;
 import com.jobseekercopilot.jobmatching.dto.EnrichJobsResponse;
 import com.jobseekercopilot.jobmatching.dto.JobMatchJob;
+import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -169,8 +172,8 @@ public class JobMatchingService {
         job.setApplicationId(record.getId());
         job.setCvDocumentId(record.getCvDocumentId());
         job.setCoverLetterDocumentId(record.getCoverLetterDocumentId());
-        job.setAppliedAt(record.getAppliedAt());
-        job.setApplicationUpdatedAt(record.getUpdatedAt());
+        job.setAppliedAt(asUtcTimestamp(record.getAppliedAt()));
+        job.setApplicationUpdatedAt(asUtcTimestamp(record.getUpdatedAt()));
     }
 
     private void markNew(JobMatchJob job) {
@@ -184,6 +187,10 @@ public class JobMatchingService {
         job.setCoverLetterDocumentId(null);
         job.setAppliedAt(null);
         job.setApplicationUpdatedAt(null);
+    }
+
+    private OffsetDateTime asUtcTimestamp(LocalDateTime timestamp) {
+        return timestamp == null ? null : timestamp.atOffset(ZoneOffset.UTC);
     }
 
     private boolean fieldMatches(String left, String right) {

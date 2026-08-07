@@ -48,15 +48,17 @@ class ApplicationTrackerClientTest {
                           "canonicalJobId": "canonical-1",
                           "provider": "REED",
                           "externalJobId": "external-1",
+                          "provenance": "GENERATED",
                           "jobTitle": "Developer",
                           "companyName": "Example Ltd",
                           "location": "London",
                           "cvDocumentId": "cv-1",
                           "coverLetterDocumentId": "cl-1",
                           "status": "APPLIED",
-                          "createdAt": "2026-07-24T09:00:00Z",
-                          "updatedAt": "2026-07-24T10:00:00Z",
-                          "appliedAt": "2026-07-24T09:30:00Z"
+                          "createdAt": "2026-07-24T09:00:00",
+                          "updatedAt": "2026-07-24T10:00:00",
+                          "appliedAt": "2026-07-24T09:30:00",
+                          "version": 2
                         }]
                         """, MediaType.APPLICATION_JSON));
 

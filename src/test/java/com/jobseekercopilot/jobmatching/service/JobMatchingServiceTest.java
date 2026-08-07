@@ -2,11 +2,14 @@ package com.jobseekercopilot.jobmatching.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import com.jobseekercopilot.jobmatching.client.ApplicationTrackerClient;
 import com.jobseekercopilot.jobmatching.dto.ApplicationRecord;
 import com.jobseekercopilot.jobmatching.dto.ApplicationStatus;
 import com.jobseekercopilot.jobmatching.dto.JobMatchJob;
 import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
@@ -53,6 +56,55 @@ class JobMatchingServiceTest {
 
         assertThat(response.getJobs().get(0).getApplicationStatus()).isEqualTo(ApplicationStatus.NEW);
         assertThat(response.getJobs().get(0).getApplicationId()).isNull();
+    }
+
+    @Test
+    void enrichesSavedApplicationWithoutInventingDocumentState() {
+        ApplicationRecord record = application(UUID.randomUUID());
+        record.setStatus(ApplicationStatus.SAVED);
+        record.setCvDocumentId(null);
+        record.setCoverLetterDocumentId(null);
+        record.setAppliedAt(null);
+        applicationTrackerClient.records = List.of(record);
+
+        JobMatchJob enriched = service.enrichJobs(
+                "user-1",
+                List.of(job("123456", "Software Developer", "Matchtech", "Dorking")))
+                .getJobs()
+                .get(0);
+
+        assertThat(enriched.getApplicationStatus()).isEqualTo(ApplicationStatus.SAVED);
+        assertThat(enriched.getApplicationId()).isEqualTo(record.getId());
+        assertThat(enriched.getCvDocumentId()).isNull();
+        assertThat(enriched.getCoverLetterDocumentId()).isNull();
+        assertThat(enriched.getAppliedAt()).isNull();
+        assertThat(enriched.getApplicationUpdatedAt())
+                .isEqualTo(OffsetDateTime.parse(
+                        "2026-06-30T10:00:00Z"));
+    }
+
+    @Test
+    void serializesRetainedApplicationTimestampsWithUtcOffsets()
+            throws Exception {
+        ApplicationRecord record = application(UUID.randomUUID());
+        applicationTrackerClient.records = List.of(record);
+
+        var response = service.enrichJobs(
+                "user-1",
+                List.of(job(
+                        "123456",
+                        "Software Developer",
+                        "Matchtech",
+                        "Dorking")));
+
+        var json = new ObjectMapper()
+                .findAndRegisterModules()
+                .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
+                .valueToTree(response);
+        assertThat(json.at("/jobs/0/appliedAt").asText())
+                .isEqualTo("2026-06-30T10:00:00Z");
+        assertThat(json.at("/jobs/0/applicationUpdatedAt").asText())
+                .isEqualTo("2026-06-30T10:00:00Z");
     }
 
     @Test
