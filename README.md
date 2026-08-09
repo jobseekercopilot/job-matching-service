@@ -1,5 +1,13 @@
 # Job Matching Service
 
+## Role in Job Seeker Copilot
+
+| Role | Called by | Calls | Data | Local port |
+|---|---|---|---|---:|
+| Stateless reconciliation of found jobs with the claimant's existing application records | Job Service | Application Tracker | None | 8097 |
+
+Despite the name and retained `matchScore` DTO field, `develop` does not calculate candidate suitability. It enriches jobs with application status/IDs by canonical, provider, or normalised-field matching. See the central [job-search journey](https://docs.jobseekercopilot.com/journeys/job-search/).
+
 Job Matching Service enriches Job Service search results with a user’s existing
 Application Tracker state. It sits after provider aggregation,
 normalisation/deduplication and distance enrichment, and before Job Service
