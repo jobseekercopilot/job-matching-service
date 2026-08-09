@@ -16,7 +16,7 @@ public class JobMatchJob {
     private String company;
     private String companyName;
     private String location;
-    private Object canonicalLocation;
+    private CanonicalLocation canonicalLocation;
     private Object salary;
     private String employmentType;
     private String postedDate;
@@ -26,6 +26,8 @@ public class JobMatchJob {
     private List<JobSourceReference> sources = new ArrayList<>();
     private Double distanceMiles;
     private Double matchScore;
+    private String workplaceType;
+    private CommuteAssessment commuteAssessment;
     private ApplicationStatus applicationStatus;
     private UUID applicationId;
     private String cvDocumentId;
@@ -53,8 +55,8 @@ public class JobMatchJob {
     public void setCompanyName(String companyName) { this.companyName = companyName; }
     public String getLocation() { return location; }
     public void setLocation(String location) { this.location = location; }
-    public Object getCanonicalLocation() { return canonicalLocation; }
-    public void setCanonicalLocation(Object canonicalLocation) { this.canonicalLocation = canonicalLocation; }
+    public CanonicalLocation getCanonicalLocation() { return canonicalLocation; }
+    public void setCanonicalLocation(CanonicalLocation canonicalLocation) { this.canonicalLocation = canonicalLocation; }
     public Object getSalary() { return salary; }
     public void setSalary(Object salary) { this.salary = salary; }
     public String getEmploymentType() { return employmentType; }
@@ -73,6 +75,10 @@ public class JobMatchJob {
     public void setDistanceMiles(Double distanceMiles) { this.distanceMiles = distanceMiles; }
     public Double getMatchScore() { return matchScore; }
     public void setMatchScore(Double matchScore) { this.matchScore = matchScore; }
+    public String getWorkplaceType() { return workplaceType; }
+    public void setWorkplaceType(String value) { workplaceType = value; }
+    public CommuteAssessment getCommuteAssessment() { return commuteAssessment; }
+    public void setCommuteAssessment(CommuteAssessment value) { commuteAssessment = value; }
     public ApplicationStatus getApplicationStatus() { return applicationStatus; }
     public void setApplicationStatus(ApplicationStatus applicationStatus) { this.applicationStatus = applicationStatus; }
     public UUID getApplicationId() { return applicationId; }

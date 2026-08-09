@@ -4,12 +4,15 @@ import com.jobseekercopilot.jobmatching.client.ApplicationTrackerClient;
 import com.jobseekercopilot.jobmatching.dto.ApplicationRecord;
 import com.jobseekercopilot.jobmatching.dto.ApplicationStatus;
 import com.jobseekercopilot.jobmatching.dto.EnrichJobsResponse;
+import com.jobseekercopilot.jobmatching.dto.CommutePreferences;
+import com.jobseekercopilot.jobmatching.dto.HomeLocation;
 import com.jobseekercopilot.jobmatching.dto.JobMatchJob;
 import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.text.Normalizer;
@@ -29,12 +32,29 @@ public class JobMatchingService {
     private static final Pattern WHITESPACE = Pattern.compile("\\s+");
 
     private final ApplicationTrackerClient applicationTrackerClient;
+    private final CommuteAssessmentService commuteAssessmentService;
 
     public JobMatchingService(ApplicationTrackerClient applicationTrackerClient) {
+        this(applicationTrackerClient, null);
+    }
+
+    @Autowired
+    public JobMatchingService(
+            ApplicationTrackerClient applicationTrackerClient,
+            CommuteAssessmentService commuteAssessmentService) {
         this.applicationTrackerClient = applicationTrackerClient;
+        this.commuteAssessmentService = commuteAssessmentService;
     }
 
     public EnrichJobsResponse enrichJobs(String userId, List<JobMatchJob> jobs) {
+        return enrichJobs(userId, jobs, null, null);
+    }
+
+    public EnrichJobsResponse enrichJobs(
+            String userId,
+            List<JobMatchJob> jobs,
+            HomeLocation homeLocation,
+            CommutePreferences commutePreferences) {
         long startedAt = System.nanoTime();
         List<JobMatchJob> safeJobs = jobs == null ? List.of() : jobs;
         log.info("Job match enrich request userId={} jobsReceived={}", userId, safeJobs.size());
@@ -43,6 +63,9 @@ public class JobMatchingService {
         List<JobMatchJob> enrichedJobs = safeJobs.stream()
                 .map(job -> enrichJob(job, applicationRecords, counters))
                 .toList();
+        if (commuteAssessmentService != null) {
+            commuteAssessmentService.assess(enrichedJobs, homeLocation, commutePreferences);
+        }
         log.info("Job match enrich complete userId={} jobsReceived={} applicationRecordsLoaded={} "
                         + "matchesByCanonicalId={} matchesByProviderExternalId={} fallbackMatches={} unmatched={} durationMs={}",
                 userId,
