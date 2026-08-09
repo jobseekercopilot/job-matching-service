@@ -40,11 +40,11 @@ jq -e --arg checksum "$expected_location_checksum" '
     and .generatedClient.generator == "openapi-generator"
     and .generatedClient.generatorVersion == "7.5.0"
 ' "$location_pin" >/dev/null
-grep -Fx '  /internal/v1/commutes:matrix:' "$location_contract" >/dev/null
+grep -Fx '  /internal/v1/commutes/matrix:' "$location_contract" >/dev/null
 
 jq -e '
     .openapi == "3.0.1"
-    and .info.version == "1.1.0"
+    and .info.version == "4.1.0"
     and .paths["/api/v1/applications/user/{userId}"].get.operationId
         == "getApplicationsForUser"
     and ([.paths["/api/v1/applications/user/{userId}"].get.security[]
@@ -62,8 +62,8 @@ jq -e '
         .content["application/json"].schema["$ref"]
         == "#/components/schemas/ErrorResponse"
     and (["id", "userId", "jobId", "canonicalJobId", "provider",
-          "externalJobId", "jobTitle", "companyName", "cvDocumentId",
-          "coverLetterDocumentId", "status", "createdAt", "updatedAt"]
+          "externalJobId", "jobTitle", "companyName", "provenance",
+          "status", "version", "createdAt", "updatedAt"]
          - .components.schemas.ApplicationRecordResponse.required | length) == 0
 ' "$contract" >/dev/null
 
