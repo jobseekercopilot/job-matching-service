@@ -15,6 +15,8 @@ copy_fixture() {
         "$source_dir/application-tracker.json" \
         "$source_dir/application-tracker.SOURCE" \
         "$source_dir/SHA256SUMS" \
+        "$source_dir/location-service.yaml" \
+        "$source_dir/location-service.pin.json" \
         "$fixture/"
 }
 
@@ -36,6 +38,16 @@ missing_source="$temporary_root/missing-source"
 copy_fixture "$missing_source"
 rm "$missing_source/application-tracker.SOURCE"
 assert_rejected "$missing_source" "missing provenance"
+
+missing_location_contract="$temporary_root/missing-location-contract"
+copy_fixture "$missing_location_contract"
+rm "$missing_location_contract/location-service.yaml"
+assert_rejected "$missing_location_contract" "missing location contract"
+
+location_checksum_drift="$temporary_root/location-checksum-drift"
+copy_fixture "$location_checksum_drift"
+printf '%s\n' ' ' >> "$location_checksum_drift/location-service.yaml"
+assert_rejected "$location_checksum_drift" "location contract checksum drift"
 
 checksum_drift="$temporary_root/checksum-drift"
 copy_fixture "$checksum_drift"
