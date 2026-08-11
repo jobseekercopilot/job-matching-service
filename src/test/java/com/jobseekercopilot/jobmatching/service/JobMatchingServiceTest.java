@@ -8,6 +8,7 @@ import com.jobseekercopilot.jobmatching.client.ApplicationTrackerClient;
 import com.jobseekercopilot.jobmatching.dto.ApplicationRecord;
 import com.jobseekercopilot.jobmatching.dto.ApplicationStatus;
 import com.jobseekercopilot.jobmatching.dto.JobMatchJob;
+import com.jobseekercopilot.jobmatching.dto.JobSourceReference;
 import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import java.util.List;
@@ -116,6 +117,26 @@ class JobMatchingServiceTest {
         var response = service.enrichJobs("user-1", List.of(job));
 
         assertThat(response.getJobs().get(0).getDistanceMiles()).isEqualTo(12.345);
+    }
+
+    @Test
+    void preservesProviderSourceTimestampOffsetWhenEnrichingJobs()
+            throws Exception {
+        applicationTrackerClient.records = List.of();
+        JobMatchJob job = job("999", "Tester", "Example", "London");
+        JobSourceReference source = new JobSourceReference();
+        source.setProvider("REED");
+        source.setProviderPostedAt(OffsetDateTime.parse("2026-08-06T09:30:00Z"));
+        job.setSources(List.of(source));
+
+        var response = service.enrichJobs("user-1", List.of(job));
+
+        var json = new ObjectMapper()
+                .findAndRegisterModules()
+                .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
+                .valueToTree(response);
+        assertThat(json.at("/jobs/0/sources/0/providerPostedAt").asText())
+                .isEqualTo("2026-08-06T09:30:00Z");
     }
 
     private ApplicationRecord application(UUID applicationId) {
