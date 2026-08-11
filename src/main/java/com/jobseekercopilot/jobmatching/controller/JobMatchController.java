@@ -31,7 +31,11 @@ public class JobMatchController {
         if (request == null || request.getUserId() == null || request.getUserId().isBlank()) {
             return ResponseEntity.badRequest().build();
         }
-        return ResponseEntity.ok(jobMatchingService.enrichJobs(request.getUserId(), request.getJobs()));
+        return ResponseEntity.ok(jobMatchingService.enrichJobs(
+                request.getUserId(),
+                request.getJobs(),
+                request.getHomeLocation(),
+                request.getCommutePreferences()));
     }
 
     @ExceptionHandler(ApplicationTrackerClient.ApplicationTrackerUnavailableException.class)
