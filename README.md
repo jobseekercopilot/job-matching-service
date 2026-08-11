@@ -9,9 +9,9 @@
 Despite the name and retained `matchScore` DTO field, `develop` does not calculate candidate suitability. It enriches jobs with application status/IDs by canonical, provider, or normalised-field matching. See the central [job-search journey](https://docs.jobseekercopilot.com/journeys/job-search/).
 
 Job Matching Service enriches Job Service search results with a user’s existing
-Application Tracker state. It sits after provider aggregation,
-normalisation/deduplication and distance enrichment, and before Job Service
-returns search results.
+Application Tracker state and an optional advisory commute assessment. It sits
+after provider aggregation and normalisation/deduplication, and before Job
+Service returns search results.
 
 It does not find jobs, persist jobs, own application records, or store
 documents.
@@ -22,7 +22,7 @@ is defined in the Infrastructure
 
 ## Runtime flow
 
-`Job Finder Gateway → Job Service → Job Matching Service → Application Tracker`
+`Job Finder Gateway → Job Service → Job Matching Service → Application Tracker + Location Service`
 
 Job Service calls:
 
@@ -32,6 +32,10 @@ POST /api/v1/job-matches/enrich
 
 The service queries Application Tracker and marks each returned job with the
 matched application identifier, status, document references, and timestamps.
+When a canonical home location, commute preferences and eligible job locations
+are supplied, it requests at most five transient route assessments from Location
+Service and attaches advisory distance/duration metadata. It does not calculate
+a candidate-suitability score or remove a job when commute is unavailable.
 See `contracts/openapi.json`.
 
 ## Build
@@ -67,10 +71,10 @@ the handwritten transport adapter with reproducible generation from source.
 
 ## Readiness
 
-This baseline preserves inherited behavior and is not a private-beta approval.
-Identity trust, matching ambiguity, bounded performance, downstream failure
-semantics, contract ownership, privacy-safe telemetry, container hardening, and
-full-path tests remain in the Job Search epic.
+The service is implemented and composed for the controlled private-beta search
+journey. That evidence is not a claim of semantic suitability matching,
+production availability or Google reliability. Remaining hardening history and
+production controls remain in the Job Search epic.
 
 See `docs/BETA_READINESS_AUDIT.md`.
 
