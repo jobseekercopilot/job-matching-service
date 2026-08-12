@@ -20,12 +20,18 @@ public class JobMatchJob {
     private Object salary;
     private String employmentType;
     private String postedDate;
+    private OffsetDateTime expiresAtUtc;
+    private OffsetDateTime applicationDeadlineAtUtc;
     private String description;
     private String url;
     private String sourceUrl;
     private List<JobSourceReference> sources = new ArrayList<>();
     private Double distanceMiles;
     private Double matchScore;
+    private MatchAssessment matchAssessment;
+    private JobDiscoveryAssessment discoveryAssessment;
+    private List<JobSkill> skills = new ArrayList<>();
+    private JobExperience experience = new JobExperience();
     private String workplaceType;
     private CommuteAssessment commuteAssessment;
     private ApplicationStatus applicationStatus;
@@ -63,6 +69,10 @@ public class JobMatchJob {
     public void setEmploymentType(String employmentType) { this.employmentType = employmentType; }
     public String getPostedDate() { return postedDate; }
     public void setPostedDate(String postedDate) { this.postedDate = postedDate; }
+    public OffsetDateTime getExpiresAtUtc() { return expiresAtUtc; }
+    public void setExpiresAtUtc(OffsetDateTime value) { expiresAtUtc = value; }
+    public OffsetDateTime getApplicationDeadlineAtUtc() { return applicationDeadlineAtUtc; }
+    public void setApplicationDeadlineAtUtc(OffsetDateTime value) { applicationDeadlineAtUtc = value; }
     public String getDescription() { return description; }
     public void setDescription(String description) { this.description = description; }
     public String getUrl() { return url; }
@@ -75,6 +85,14 @@ public class JobMatchJob {
     public void setDistanceMiles(Double distanceMiles) { this.distanceMiles = distanceMiles; }
     public Double getMatchScore() { return matchScore; }
     public void setMatchScore(Double matchScore) { this.matchScore = matchScore; }
+    public MatchAssessment getMatchAssessment() { return matchAssessment; }
+    public void setMatchAssessment(MatchAssessment value) { matchAssessment = value; }
+    public JobDiscoveryAssessment getDiscoveryAssessment() { return discoveryAssessment; }
+    public void setDiscoveryAssessment(JobDiscoveryAssessment value) { discoveryAssessment = value; }
+    public List<JobSkill> getSkills() { return skills; }
+    public void setSkills(List<JobSkill> value) { skills = value == null ? new ArrayList<>() : value; }
+    public JobExperience getExperience() { return experience; }
+    public void setExperience(JobExperience value) { experience = value == null ? new JobExperience() : value; }
     public String getWorkplaceType() { return workplaceType; }
     public void setWorkplaceType(String value) { workplaceType = value; }
     public CommuteAssessment getCommuteAssessment() { return commuteAssessment; }

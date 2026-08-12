@@ -34,8 +34,10 @@ The service queries Application Tracker and marks each returned job with the
 matched application identifier, status, document references, and timestamps.
 When a canonical home location, commute preferences and eligible job locations
 are supplied, it requests at most five transient route assessments from Location
-Service and attaches advisory distance/duration metadata. It does not calculate
-a candidate-suitability score or remove a job when commute is unavailable.
+Service and attaches advisory distance/duration metadata. It also calculates an
+explainable deterministic profile match from bounded, confirmed candidate
+evidence. It does not use an LLM, infer eligibility or remove a job when commute
+is unavailable.
 See `contracts/openapi.json`.
 
 ## Build
