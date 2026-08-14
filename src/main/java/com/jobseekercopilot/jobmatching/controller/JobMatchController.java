@@ -35,7 +35,9 @@ public class JobMatchController {
                 request.getUserId(),
                 request.getJobs(),
                 request.getHomeLocation(),
-                request.getCommutePreferences()));
+                request.getCommutePreferences(),
+                request.getTargetRole(),
+                request.getCandidateProfile()));
     }
 
     @ExceptionHandler(ApplicationTrackerClient.ApplicationTrackerUnavailableException.class)

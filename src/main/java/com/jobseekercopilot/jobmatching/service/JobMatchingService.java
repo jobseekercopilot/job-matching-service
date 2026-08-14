@@ -33,17 +33,27 @@ public class JobMatchingService {
 
     private final ApplicationTrackerClient applicationTrackerClient;
     private final CommuteAssessmentService commuteAssessmentService;
+    private final DeterministicJobMatchScorer matchScorer;
 
     public JobMatchingService(ApplicationTrackerClient applicationTrackerClient) {
-        this(applicationTrackerClient, null);
+        this(applicationTrackerClient, null, new DeterministicJobMatchScorer());
+    }
+
+    public JobMatchingService(
+            ApplicationTrackerClient applicationTrackerClient,
+            CommuteAssessmentService commuteAssessmentService) {
+        this(applicationTrackerClient, commuteAssessmentService,
+                new DeterministicJobMatchScorer());
     }
 
     @Autowired
     public JobMatchingService(
             ApplicationTrackerClient applicationTrackerClient,
-            CommuteAssessmentService commuteAssessmentService) {
+            CommuteAssessmentService commuteAssessmentService,
+            DeterministicJobMatchScorer matchScorer) {
         this.applicationTrackerClient = applicationTrackerClient;
         this.commuteAssessmentService = commuteAssessmentService;
+        this.matchScorer = matchScorer;
     }
 
     public EnrichJobsResponse enrichJobs(String userId, List<JobMatchJob> jobs) {
@@ -55,6 +65,17 @@ public class JobMatchingService {
             List<JobMatchJob> jobs,
             HomeLocation homeLocation,
             CommutePreferences commutePreferences) {
+        return enrichJobs(userId, jobs, homeLocation, commutePreferences,
+                null, null);
+    }
+
+    public EnrichJobsResponse enrichJobs(
+            String userId,
+            List<JobMatchJob> jobs,
+            HomeLocation homeLocation,
+            CommutePreferences commutePreferences,
+            String targetRole,
+            com.jobseekercopilot.jobmatching.dto.CandidateProfile candidateProfile) {
         long startedAt = System.nanoTime();
         List<JobMatchJob> safeJobs = jobs == null ? List.of() : jobs;
         log.info("Job match enrich request userId={} jobsReceived={}", userId, safeJobs.size());
@@ -66,6 +87,11 @@ public class JobMatchingService {
         if (commuteAssessmentService != null) {
             commuteAssessmentService.assess(enrichedJobs, homeLocation, commutePreferences);
         }
+        matchScorer.score(
+                enrichedJobs,
+                targetRole,
+                candidateProfile,
+                commutePreferences);
         log.info("Job match enrich complete userId={} jobsReceived={} applicationRecordsLoaded={} "
                         + "matchesByCanonicalId={} matchesByProviderExternalId={} fallbackMatches={} unmatched={} durationMs={}",
                 userId,

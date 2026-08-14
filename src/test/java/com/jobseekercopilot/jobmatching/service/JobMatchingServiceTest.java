@@ -8,6 +8,8 @@ import com.jobseekercopilot.jobmatching.client.ApplicationTrackerClient;
 import com.jobseekercopilot.jobmatching.dto.ApplicationRecord;
 import com.jobseekercopilot.jobmatching.dto.ApplicationStatus;
 import com.jobseekercopilot.jobmatching.dto.JobMatchJob;
+import com.jobseekercopilot.jobmatching.dto.CandidateProfile;
+import com.jobseekercopilot.jobmatching.dto.JobDiscoveryAssessment;
 import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import java.util.List;
@@ -116,6 +118,29 @@ class JobMatchingServiceTest {
         var response = service.enrichJobs("user-1", List.of(job));
 
         assertThat(response.getJobs().get(0).getDistanceMiles()).isEqualTo(12.345);
+    }
+
+    @Test
+    void enrichesApplicationStateAndDeterministicProfileMatchTogether() {
+        applicationTrackerClient.records = List.of();
+        JobMatchJob job = job("999", "Software Developer", "Example", "London");
+        JobDiscoveryAssessment discovery = new JobDiscoveryAssessment();
+        discovery.setTargetRole("Software Developer");
+        discovery.setTargetRoleAlignment("ALIGNED");
+        discovery.setSeniority("UNSPECIFIED");
+        job.setDiscoveryAssessment(discovery);
+        job.setDescription("Build Java and Angular services");
+        CandidateProfile profile = new CandidateProfile();
+        profile.setSkills(List.of("Java", "Angular"));
+
+        var enriched = service.enrichJobs(
+                "user-1", List.of(job), null, null,
+                "Software Developer", profile).getJobs().get(0);
+
+        assertThat(enriched.getApplicationStatus()).isEqualTo(ApplicationStatus.NEW);
+        assertThat(enriched.getMatchScore()).isPositive();
+        assertThat(enriched.getMatchAssessment().getProvenance())
+                .isEqualTo("DETERMINISTIC_PROFILE");
     }
 
     private ApplicationRecord application(UUID applicationId) {
