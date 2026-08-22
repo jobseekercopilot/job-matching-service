@@ -1,6 +1,6 @@
 package com.jobseekercopilot.jobmatching.dto;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -16,22 +16,30 @@ public class JobMatchJob {
     private String company;
     private String companyName;
     private String location;
-    private Object canonicalLocation;
+    private CanonicalLocation canonicalLocation;
     private Object salary;
     private String employmentType;
     private String postedDate;
+    private OffsetDateTime expiresAtUtc;
+    private OffsetDateTime applicationDeadlineAtUtc;
     private String description;
     private String url;
     private String sourceUrl;
     private List<JobSourceReference> sources = new ArrayList<>();
     private Double distanceMiles;
     private Double matchScore;
+    private MatchAssessment matchAssessment;
+    private JobDiscoveryAssessment discoveryAssessment;
+    private List<JobSkill> skills = new ArrayList<>();
+    private JobExperience experience = new JobExperience();
+    private String workplaceType;
+    private CommuteAssessment commuteAssessment;
     private ApplicationStatus applicationStatus;
     private UUID applicationId;
     private String cvDocumentId;
     private String coverLetterDocumentId;
-    private LocalDateTime appliedAt;
-    private LocalDateTime applicationUpdatedAt;
+    private OffsetDateTime appliedAt;
+    private OffsetDateTime applicationUpdatedAt;
 
     public String getId() { return id; }
     public void setId(String id) { this.id = id; }
@@ -53,14 +61,18 @@ public class JobMatchJob {
     public void setCompanyName(String companyName) { this.companyName = companyName; }
     public String getLocation() { return location; }
     public void setLocation(String location) { this.location = location; }
-    public Object getCanonicalLocation() { return canonicalLocation; }
-    public void setCanonicalLocation(Object canonicalLocation) { this.canonicalLocation = canonicalLocation; }
+    public CanonicalLocation getCanonicalLocation() { return canonicalLocation; }
+    public void setCanonicalLocation(CanonicalLocation canonicalLocation) { this.canonicalLocation = canonicalLocation; }
     public Object getSalary() { return salary; }
     public void setSalary(Object salary) { this.salary = salary; }
     public String getEmploymentType() { return employmentType; }
     public void setEmploymentType(String employmentType) { this.employmentType = employmentType; }
     public String getPostedDate() { return postedDate; }
     public void setPostedDate(String postedDate) { this.postedDate = postedDate; }
+    public OffsetDateTime getExpiresAtUtc() { return expiresAtUtc; }
+    public void setExpiresAtUtc(OffsetDateTime value) { expiresAtUtc = value; }
+    public OffsetDateTime getApplicationDeadlineAtUtc() { return applicationDeadlineAtUtc; }
+    public void setApplicationDeadlineAtUtc(OffsetDateTime value) { applicationDeadlineAtUtc = value; }
     public String getDescription() { return description; }
     public void setDescription(String description) { this.description = description; }
     public String getUrl() { return url; }
@@ -73,6 +85,18 @@ public class JobMatchJob {
     public void setDistanceMiles(Double distanceMiles) { this.distanceMiles = distanceMiles; }
     public Double getMatchScore() { return matchScore; }
     public void setMatchScore(Double matchScore) { this.matchScore = matchScore; }
+    public MatchAssessment getMatchAssessment() { return matchAssessment; }
+    public void setMatchAssessment(MatchAssessment value) { matchAssessment = value; }
+    public JobDiscoveryAssessment getDiscoveryAssessment() { return discoveryAssessment; }
+    public void setDiscoveryAssessment(JobDiscoveryAssessment value) { discoveryAssessment = value; }
+    public List<JobSkill> getSkills() { return skills; }
+    public void setSkills(List<JobSkill> value) { skills = value == null ? new ArrayList<>() : value; }
+    public JobExperience getExperience() { return experience; }
+    public void setExperience(JobExperience value) { experience = value == null ? new JobExperience() : value; }
+    public String getWorkplaceType() { return workplaceType; }
+    public void setWorkplaceType(String value) { workplaceType = value; }
+    public CommuteAssessment getCommuteAssessment() { return commuteAssessment; }
+    public void setCommuteAssessment(CommuteAssessment value) { commuteAssessment = value; }
     public ApplicationStatus getApplicationStatus() { return applicationStatus; }
     public void setApplicationStatus(ApplicationStatus applicationStatus) { this.applicationStatus = applicationStatus; }
     public UUID getApplicationId() { return applicationId; }
@@ -81,8 +105,8 @@ public class JobMatchJob {
     public void setCvDocumentId(String cvDocumentId) { this.cvDocumentId = cvDocumentId; }
     public String getCoverLetterDocumentId() { return coverLetterDocumentId; }
     public void setCoverLetterDocumentId(String coverLetterDocumentId) { this.coverLetterDocumentId = coverLetterDocumentId; }
-    public LocalDateTime getAppliedAt() { return appliedAt; }
-    public void setAppliedAt(LocalDateTime appliedAt) { this.appliedAt = appliedAt; }
-    public LocalDateTime getApplicationUpdatedAt() { return applicationUpdatedAt; }
-    public void setApplicationUpdatedAt(LocalDateTime applicationUpdatedAt) { this.applicationUpdatedAt = applicationUpdatedAt; }
+    public OffsetDateTime getAppliedAt() { return appliedAt; }
+    public void setAppliedAt(OffsetDateTime appliedAt) { this.appliedAt = appliedAt; }
+    public OffsetDateTime getApplicationUpdatedAt() { return applicationUpdatedAt; }
+    public void setApplicationUpdatedAt(OffsetDateTime applicationUpdatedAt) { this.applicationUpdatedAt = applicationUpdatedAt; }
 }

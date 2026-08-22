@@ -1,8 +1,10 @@
 FROM maven:3.9-eclipse-temurin-17 AS build
 WORKDIR /app
 COPY pom.xml .
+COPY contracts ./contracts
 COPY src ./src
-RUN mvn clean package
+RUN mvn clean verify
+RUN cmp contracts/openapi.json target/openapi.json
 
 FROM eclipse-temurin:17-jre-alpine
 WORKDIR /app
